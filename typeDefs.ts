@@ -4,7 +4,7 @@ export const typeDefs = `#graphql
         id: ID!,
         name: String!,
         price: Int!,
-        vehicleID: ID!
+        vehicleId: ID!
     }
 
     type Vehicle {
@@ -20,7 +20,7 @@ export const typeDefs = `#graphql
         vehicle(id:ID!): Vehicle
         parts: [Part!]!
         vehiclesByManufacturer(manufacturer:String!): [Vehicle!]!
-        partsByVehicle(vehicleID:ID!): [Part!]!
+        partsByVehicle(vehicleId:ID!): [Part!]!
         vehiclesByYearRange(startYear:Int!, endYear: Int!): [Vehicle!]!
     }
 

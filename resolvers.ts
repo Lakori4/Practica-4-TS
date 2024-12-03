@@ -14,6 +14,12 @@ export const resolvers = {
             const resultFinal = await Promise.all(result.map(e => change(e,context.PartCollection)))
             return resultFinal
         },
+        
+        vehicle: async(
+            _:unknown,
+            args: {id}
+        ):Promise<Vehicle|null> => {}
+
 
     },
     Mutation: {
