@@ -15,6 +15,15 @@ export const resolvers = {
             return resultFinal
         },
         
+        vehicle: async(
+            _:unknown,
+            args: {id: string},
+            context: { VehicleCollection: Collection<ModelVehicle>, PartCollection: Collection<ModelPart> }
+        ):Promise<Vehicle|null> => {
+            const result = await context.VehicleCollection.findOne({_id:args.id})
+            return change(result,context.PartCollection)
+        }
+
 
     },
     Mutation: {
