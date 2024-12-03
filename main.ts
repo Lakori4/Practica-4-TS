@@ -1,8 +1,15 @@
-export function add(a: number, b: number): number {
-  return a + b;
+
+import { ApolloServer } from "@apollo/server";
+import { MongoClient } from "mongodb";
+import { startStandaloneServer } from "@apollo/server/standalone";
+
+const MONGO_URL = "mongodb+srv://nebrija:nebrija@clusteryolo.wvdnt.mongodb.net/?retryWrites=true&w=majority&appName=ClusterYolo";
+
+if (!MONGO_URL) {
+  throw new Error("Please provide a MONGO_URL");
 }
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+const mongoClient = new MongoClient(MONGO_URL);
+await mongoClient.connect();
+
+console.log("")
