@@ -16,9 +16,9 @@ export const typeDefs = `#graphql
     }
 
     type Query {
-        vehicles(): [Vehicle!]!
+        vehicles: [Vehicle!]!
         vehicle(id:ID!): Vehicle
-        parts(): [Part!]!
+        parts: [Part!]!
         vehiclesByManufacturer(manufacturer:String!): [Vehicle!]!
         partsByVehicle(vehicleID:ID!): [Part!]!
         vehiclesByYearRange(startYear:Int!, endYear: Int!): [Vehicle!]!
