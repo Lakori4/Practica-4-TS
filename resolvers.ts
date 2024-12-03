@@ -14,6 +14,7 @@ export const resolvers = {
             const resultFinal = await Promise.all(result.map(e => change(e,context.PartCollection)))
             return resultFinal
         },
+        
 
     },
     Mutation: {

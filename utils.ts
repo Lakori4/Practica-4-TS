@@ -18,11 +18,11 @@ export const getParts = async (
     PartCollection: Collection<ModelPart>
 ): Promise<Part> => {
     const result = await PartCollection.findOne({_id:id})
-    const aux:Part ={
-        id: "buenas",
-        name: "Buenas",
-        price: 3,
-        vehicleID: "asdasd"
-    }
-    return aux
+    console.log(result?.vehicleId)
+    return ({
+        id: result!._id.toString(),
+        name: result!.name,
+        price: result!.price,
+        vehicleId: result!.vehicleId.toString()
+    })
 }
