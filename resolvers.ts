@@ -1,5 +1,5 @@
 import { Collection } from "mongodb";
-import { ModelPart, ModelVehicle, Vehicle } from "./types.ts";
+import { ModelPart, ModelVehicle, Part, Vehicle } from "./types.ts";
 import { change } from "./utils.ts";
 
 export const resolvers = {
@@ -39,7 +39,7 @@ export const resolvers = {
                 name,
                 manufacturer,
                 year,
-                parts: [],
+                parts: Array<Part>,
             };
             return change(vModel);
         }
