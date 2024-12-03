@@ -15,11 +15,6 @@ export const resolvers = {
             return resultFinal
         },
         
-        vehicle: async(
-            _:unknown,
-            args: {id}
-        ):Promise<Vehicle|null> => {}
-
 
     },
     Mutation: {
