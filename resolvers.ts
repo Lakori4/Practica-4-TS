@@ -1,6 +1,6 @@
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { ModelPart, ModelVehicle, Part, Vehicle } from "./types.ts";
-import { change } from "./utils.ts";
+import { change, FromModelToPart, FromModelToVehicle } from "./utils.ts";
 
 export const resolvers = {
     Query: {
@@ -39,20 +39,31 @@ export const resolvers = {
                 name,
                 manufacturer,
                 year,
-                parts: Array<Part>,
+                parts: Array<ObjectId>,
             };
-            return change(vModel);
-        }
+            return FromModelToVehicle(vModel, pCollection);
+        },
         addPart: async (
             _: unknown,
-            args : { name: string, price: number, vehicleID: ObjectId },
+            args : { name: string, price: number, vehicleID: string },
             context: {
                 vCollection: Collection<ModelVehicle>;
                 pCollection: Collection<ModelPart>;
             }, 
         ): Promise<Part> => {
                 const { name, price, vehicleID } = args;
-                const insertedID = await 
+                const insertedID = await context.pCollection.insertOne({
+                    name,
+                    price,
+                    vehicleID: new ObjectId(vehicleID),
+                })
+
+                const pModel = {
+                    name,
+                    price,
+                    vehicleID: new ObjectId(vehicleID),
+                }
+                return FromModelToPart(pModel)
             }
     }
 }

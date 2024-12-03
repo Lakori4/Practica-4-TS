@@ -4,26 +4,25 @@ import { Collection, ObjectId } from "mongodb";
 
 export const FromModelToVehicle = async (
     vehicle: ModelVehicle, 
-    
+    pCollection: Collection<ModelPart>
 ): Promise<Vehicle> => {
+
+    const parts = await pCollection.find({_id: {$in: vehicle.parts}}).toArray()
     return {
         id: vehicle._id!.toString(),
         name: vehicle.name,
         manufacturer: vehicle.manufacturer,
         year: vehicle.year,
-        parts: FromModelToPart(vehicle.parts);
+        parts: parts.map(v => FromModelToPart(v))
     }
 }
 
-export const FromModelToPart = async (
-    part: ModelPart, 
-    
-): Promise<Part> => {
+export const FromModelToPart = ( part: ModelPart ): Part => {
     return {
-        id: part._id!.toString(),
-        name: part.name,
-        price: part.price,
-        vehicleID: part.vehicleID.toString()
+            id: part._id!.toString(),
+            name: part.name,
+            price: part.price,
+            vehicleID: part.vehicleID.toString()
     }
 }
 
