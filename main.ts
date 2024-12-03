@@ -3,13 +3,15 @@ import { ApolloServer } from "@apollo/server";
 import { MongoClient } from "mongodb";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
-const MONGO_URL = "mongodb+srv://nebrija:nebrija@clusteryolo.wvdnt.mongodb.net/?retryWrites=true&w=majority&appName=ClusterYolo";
+const MONGO_URL = "mongodb+srv://aperedas:18062004@backend.61kmp.mongodb.net/?retryWrites=true&w=majority&appName=Backend";
 
-if (!MONGO_URL) {
-  throw new Error("Please provide a MONGO_URL");
-}
 
 const mongoClient = new MongoClient(MONGO_URL);
 await mongoClient.connect();
 
-console.log("")
+console.log("Conectado a MongoDB");
+
+const mongoDB = mongoClient.db("CarDealer");
+
+const vehicleCollection = mongoDB.collection<ModelVehicle>("Vehicle");
+const partCollection = mongoDB.collection<ModelPart>("part");
