@@ -4,6 +4,7 @@
     "jsr:@std/assert@1": "1.0.8",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "npm:@apollo/server@^4.11.2": "4.11.2_graphql@16.9.0",
+    "npm:graphql@^16.9.0": "16.9.0",
     "npm:mongodb@^6.11.0": "6.11.0"
   },
   "jsr": {
@@ -823,6 +824,7 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "npm:@apollo/server@^4.11.2",
+      "npm:graphql@^16.9.0",
       "npm:mongodb@^6.11.0"
     ]
   }
