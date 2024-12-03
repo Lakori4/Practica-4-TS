@@ -12,6 +12,7 @@ export const typeDefs = `#graphql
         name: String!,
         manufacturer: String!,
         year: Int!,
+        #joke: String!
         parts: [Part]!
     }
 
@@ -31,4 +32,4 @@ export const typeDefs = `#graphql
         deletePart(id: ID!): Part!
     }
 
-`
+`;
