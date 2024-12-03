@@ -1,5 +1,6 @@
 import { ModelPart, ModelVehicle, Part, Vehicle } from "./types.ts";
 import { Collection, ObjectId } from "mongodb";
+
 export const change = async (
     vehicle: ModelVehicle, 
     PartCollection: Collection<ModelPart>
@@ -24,4 +25,13 @@ export const getParts = async (
         price: result!.price,
         vehicleId: result!.vehicleId.toString()
     })
+}
+
+export const FromModelToPart = (part: ModelPart): Part => {
+    return {
+        id: part._id!.toString(),
+        name: part.name,
+        price: part.price,
+        vehicleId: part.vehicleId.toString()
+    }
 }
