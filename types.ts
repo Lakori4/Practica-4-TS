@@ -25,5 +25,6 @@ export type Vehicle = {
     name: string,
     manufacturer: string,
     year: number,
+    joke: string,
     parts: Part[]
 }
