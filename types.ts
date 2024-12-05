@@ -10,14 +10,14 @@ export type ModelVehicle = OptionalId <{
 export type ModelPart = OptionalId <{
     name: string,
     price: number,
-    vehicleID: ObjectId
+    vehicleId: ObjectId
 }>
 
 export type Part = {
     id: string,
     name: string,
     price: number,
-    vehicleID: string
+    vehicleId: string
 }
 
 export type Vehicle = {
@@ -25,5 +25,6 @@ export type Vehicle = {
     name: string,
     manufacturer: string,
     year: number,
+    joke: string,
     parts: Part[]
 }

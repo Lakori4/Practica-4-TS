@@ -4,7 +4,7 @@ export const typeDefs = `#graphql
         id: ID!,
         name: String!,
         price: Int!,
-        vehicleID: ID!
+        vehicleId: ID!
     }
 
     type Vehicle {
@@ -12,8 +12,8 @@ export const typeDefs = `#graphql
         name: String!,
         manufacturer: String!,
         year: Int!,
-        #joke: String!
-        parts: [Part]!
+        joke: String!,
+        parts: [Part!]!
     }
 
     type Query {
@@ -21,8 +21,8 @@ export const typeDefs = `#graphql
         vehicle(id:ID!): Vehicle
         parts: [Part!]!
         vehiclesByManufacturer(manufacturer:String!): [Vehicle!]!
-        partsByVehicle(vehicleID:ID!): [Part!]!
-        vehiclesByYearRange(startYear:Int!, endYear: Int!): [Vehicle!]!
+        partsByVehicle(vehicleId:ID!): [Part!]!
+        vehiclesByYearRange(startYear:Int!, endYear:Int!): [Vehicle!]!
     }
 
     type Mutation {
