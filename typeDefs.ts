@@ -12,7 +12,8 @@ export const typeDefs = `#graphql
         name: String!,
         manufacturer: String!,
         year: Int!,
-        parts: [Part]!
+        joke: String!,
+        parts: [Part!]!
     }
 
     type Query {
