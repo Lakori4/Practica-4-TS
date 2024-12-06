@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from "mongodb";
 import { ModelPart, ModelVehicle, Part, Vehicle } from "./types.ts";
-import { change, FromModelToPart, FromModelToVehicle } from "./utils.ts";
+import { change, FromModelToPart } from "./utils.ts";
 
 export const resolvers = {
     Query: {
@@ -70,13 +70,13 @@ export const resolvers = {
             _: unknown,
             args: { name: string, manufacturer: string, year: number},
             context: {
-                vCollection: Collection<ModelVehicle>;
-                pCollection: Collection<ModelPart>;
+                VehicleCollection: Collection<ModelVehicle>;
+                PartCollection: Collection<ModelPart>;
             },
         ): Promise<Vehicle> => {
             const { name, manufacturer, year } = args;
 
-            const insertedID = await context.vCollection.insertOne({
+            const { insertedId } = await context.VehicleCollection.insertOne({
                 name,
                 manufacturer,
                 year,
@@ -84,13 +84,13 @@ export const resolvers = {
             })
 
             const vModel = {
-                _id: insertedID,
+                _id: insertedId,
                 name,
                 manufacturer,
                 year,
-                parts: Array<ObjectId>,
+                parts: new Array<ObjectId>,
             };
-            return FromModelToVehicle(vModel, pCollection);
+            return change(vModel, context.PartCollection);
         },
         addPart: async (
             _: unknown,
@@ -100,19 +100,43 @@ export const resolvers = {
                 pCollection: Collection<ModelPart>;
             }, 
         ): Promise<Part> => {
-                const { name, price, vehicleID } = args;
-                const insertedID = await context.pCollection.insertOne({
-                    name,
-                    price,
-                    vehicleID: new ObjectId(vehicleID),
-                })
+            const { name, price, vehicleID } = args;
+            const { insertedId } = await context.pCollection.insertOne({
+                name,
+                price,
+                vehicleId: new ObjectId(vehicleID),
+            })
 
-                const pModel = {
-                    name,
-                    price,
-                    vehicleID: new ObjectId(vehicleID),
-                }
-                return FromModelToPart(pModel)
+            const pModel = {
+                _id: insertedId,        
+                name,
+                price,
+                vehicleId: new ObjectId(vehicleID),
             }
+            return FromModelToPart(pModel)
+        },
+        updateVehicle: async (
+            _: unknown,
+            args: { id: string, name:string, manufacturer:string, year: number},
+            context: {
+                VehicleCollection: Collection<ModelVehicle>;
+                PartCollection: Collection<ModelPart>;
+            },
+        ): Promise<Vehicle> => {
+            const {id, name, manufacturer, year } = args
+            const { modifiedCount } = await context.VehicleCollection.updateOne(
+                { _id: new ObjectId (id) },
+                { $set: {name, manufacturer, year}}
+            )
+
+            const vModel = {
+                _id: new ObjectId (id),
+                name,
+                manufacturer,
+                year,
+                parts: (await context.PartCollection.find({vehicleId: new ObjectId (id)}).toArray()).map (e => e._id),
+            }
+            return change(vModel, context.PartCollection)
+        }
     }
 }
