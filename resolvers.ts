@@ -73,8 +73,15 @@ export const resolvers = {
                 VehicleCollection: Collection<ModelVehicle>;
                 PartCollection: Collection<ModelPart>;
             },
-        ): Promise<Vehicle> => {
+        ): Promise<Vehicle| null> => {
             const { name, manufacturer, year } = args;
+
+            const result = await context.VehicleCollection.findOne({manufacturer, year})
+
+            if ((!name || !manufacturer || !year) || result?.name === name) {
+                return null
+            }
+            
 
             const { insertedId } = await context.VehicleCollection.insertOne({
                 name,
@@ -82,6 +89,7 @@ export const resolvers = {
                 year,
                 parts: [],
             })
+            
 
             const vModel = {
                 _id: insertedId,
@@ -122,7 +130,7 @@ export const resolvers = {
                 VehicleCollection: Collection<ModelVehicle>;
                 PartCollection: Collection<ModelPart>;
             },
-        ): Promise<Vehicle> => {
+        ): Promise<Vehicle| null> => {
             const {id, name, manufacturer, year } = args
             const { modifiedCount } = await context.VehicleCollection.updateOne(
                 { _id: new ObjectId (id) },
