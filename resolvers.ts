@@ -102,24 +102,34 @@ export const resolvers = {
         },
         addPart: async (
             _: unknown,
-            args : { name: string, price: number, vehicleID: string },
+            args : { name: string, price: number, vehicleId: string },
             context: {
-                vCollection: Collection<ModelVehicle>;
-                pCollection: Collection<ModelPart>;
+                VehicleCollection: Collection<ModelVehicle>;
+                PartCollection: Collection<ModelPart>;
             }, 
-        ): Promise<Part> => {
-            const { name, price, vehicleID } = args;
-            const { insertedId } = await context.pCollection.insertOne({
+        ): Promise<Part | null> => {
+            const { name, price, vehicleId } = args;
+
+            const result = await context.VehicleCollection.findOne({_id: new ObjectId (vehicleId)})
+           
+            if (!name || !price || !vehicleId || !result) {
+                return null
+            }
+            const { insertedId } = await context.PartCollection.insertOne({
                 name,
                 price,
-                vehicleId: new ObjectId(vehicleID),
+                vehicleId: new ObjectId(vehicleId),
             })
+            const { modifiedCount } = await context.VehicleCollection.updateOne(
+                { _id: new ObjectId (vehicleId) },
+                { $push: {parts: insertedId}}
+            )
 
             const pModel = {
                 _id: insertedId,        
                 name,
                 price,
-                vehicleId: new ObjectId(vehicleID),
+                vehicleId: new ObjectId(vehicleId),
             }
             return FromModelToPart(pModel)
         },
@@ -132,10 +142,21 @@ export const resolvers = {
             },
         ): Promise<Vehicle| null> => {
             const {id, name, manufacturer, year } = args
+
+            const result = await context.VehicleCollection.findOne({manufacturer, year})
+
+            if ((!name || !manufacturer || !year) || result?.name === name) {
+                return null
+            }
+
             const { modifiedCount } = await context.VehicleCollection.updateOne(
                 { _id: new ObjectId (id) },
                 { $set: {name, manufacturer, year}}
             )
+
+            if (!modifiedCount) {
+                return null
+            }
 
             const vModel = {
                 _id: new ObjectId (id),

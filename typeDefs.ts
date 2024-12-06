@@ -27,7 +27,7 @@ export const typeDefs = `#graphql
 
     type Mutation {
         addVehicle(name:String!, manufacturer:String!, year:Int!): Vehicle
-        addPart(name:String!, price:Int!, vehicleId:ID!): Part!
+        addPart(name:String!, price:Int!, vehicleId:ID!): Part
         updateVehicle(id: ID!, name:String, manufacturer:String, year:Int): Vehicle
         deletePart(id: ID!): Part
     }
