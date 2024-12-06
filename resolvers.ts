@@ -120,7 +120,7 @@ export const resolvers = {
                 price,
                 vehicleId: new ObjectId(vehicleId),
             })
-            const { modifiedCount } = await context.VehicleCollection.updateOne(
+            await context.VehicleCollection.updateOne(
                 { _id: new ObjectId (vehicleId) },
                 { $push: {parts: insertedId}}
             )
@@ -166,6 +166,38 @@ export const resolvers = {
                 parts: (await context.PartCollection.find({vehicleId: new ObjectId (id)}).toArray()).map (e => e._id),
             }
             return change(vModel, context.PartCollection)
+        },
+        deletePart: async (
+            _: unknown,
+            args: { id:string },
+            context: {
+                VehicleCollection: Collection<ModelVehicle>;
+                PartCollection: Collection<ModelPart>;
+            },
+        ): Promise <Part | null> => {
+
+            const { id } = args
+
+            const result = await context.PartCollection.findOne({_id:new ObjectId(id)})
+
+            if (!result) {
+                return null
+            }
+
+            context.PartCollection.deleteOne({_id: new ObjectId (id)});
+
+            await context.VehicleCollection.updateOne(
+                { _id: new ObjectId (result.vehicleId) },
+                { $pull: {parts: new ObjectId (id)}}
+            )
+
+            const pModel = {
+                _id: result._id,
+                name: result.name,
+                price: result.price,
+                vehicleId: result.vehicleId
+            }
+            return FromModelToPart(pModel)
         }
     }
 }
